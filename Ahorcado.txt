@@ -61,10 +61,37 @@ public void Ahorcado()
     if (palabraComprobada == palabraOculta) 
     {
         Console.WriteLine("¡Felicidades! Has adivinado la palabra: " + palabraOculta);
+        Console.WriteLine();
+        string respuesta = Repetir();
+        if (respuesta == "s")
+        {
+            Console.Clear();
+            Ahorcado();
+        }
+        else
+        {
+            Console.WriteLine("Hasta otra bobi.");
+        }
     }
     else
     {
         Console.WriteLine("Lo siento, te quedaste sin intentos. La palabra era: " + palabraOculta);
     }
     Console.ReadKey();
+
+    string Repetir()
+    {
+        string respuesta = "";
+        do
+        {
+            try
+            {
+                Console.Write("¿Quieres volver a jugar? (S/N): ");
+                respuesta = Console.ReadLine();
+                respuesta = respuesta.ToLower();
+            }
+            catch (Exception e) { Console.WriteLine($"{e.Message}"); }
+        } while (respuesta != "s" && respuesta != "n");
+        return respuesta;
+    }
 }
