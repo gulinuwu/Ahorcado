@@ -1,0 +1,70 @@
+//Juego Ahorcado
+//El juego consiste en una palabra inicialmente elegida por el programa, la cual hay que ir adivinando introduciendo letra a letra.
+//El programa nos actualizará esa palabra oculta con guiones cambiando los guiones por la letra introducida en el caso de que sea correcta.
+public void Ahorcado()
+{
+    Console.WriteLine("Juego del Ahorcado");
+    Console.WriteLine("Intenta adivinar la palabra oculta utilizando un solo carácter por intento hasta sacar la palabra completa.");
+    Console.WriteLine("----------------------------------------------------------------------------------------------------------");
+    Console.WriteLine();
+
+    Random random = new Random();
+
+    //Creamos una lista de Palabras que elegiremos una aleatoriamente para usarla como palabra a adivinar en el juego.
+    List<string> palabras = new List<string> { "cetaceo", "sintonia", "nutria", "ganso", "salchichon", "pescadito", "bomba", "onomatopeya" };
+
+    char entrada = '-';
+    int aleatoria = random.Next(0, palabras.Count); //Variable que almacena el número aleatorio de la posicion de la lista anterior.
+    string palabraOculta = palabras[aleatoria]; //Esta variable almacena el valor de la posicion de la lista anterior, es decir, almacena la palabra seleccionada aleatoriamente.
+    string palabraComprobada = new string('_', palabraOculta.Length); //Creamos la variable PalabraComprobada y le añadimos "_" en la misma cantidad que letras tenga la palabraOculta.
+    int intentos = 0;
+    int maxIntentos = 6; //Número máximo de vidas para el juego. Si se acierta alguna letra no restará vidas.
+
+    do
+    {
+        Console.WriteLine();
+        Console.WriteLine("Palabra actual: " + palabraComprobada);
+        Console.WriteLine("Intentos restantes: " + (maxIntentos - intentos));
+
+        do
+        {
+            Console.Write("Escribe un carácter para intentar adivinar la palabra: ");
+            char.TryParse(Console.ReadLine(), out entrada); //Almacena una sola letra en la variable entrada.
+            entrada = char.ToLower(entrada); //Se transforma esa letra a minuscula para normalizar el programa.
+
+            if (!char.IsLetter(entrada)) //Comprobación de que el caracter introducida es una letra como tal.
+            {
+                Console.WriteLine("Introduce un carácter válido (letra).");
+            }
+        } while (!char.IsLetter(entrada)); //Bucle que se repite hasta que el caracter introducida sea una letra.
+
+        bool letraAdivinada = false;
+
+        for (int i = 0; i < palabraOculta.Length; i++)
+        {
+            char[] palabraComprobadaArray = palabraComprobada.ToCharArray(); //Creamos un array de caracteres y almacenamos cada caracter que contiene palabraComprobada en ese mismo array.
+            if (palabraOculta[i] == entrada) //comprobación de que la letra introducida anteriormente sea correcta dentro de la palabraOculta.
+            {
+                palabraComprobadaArray[i] = entrada; //En el momento que esa letra coincida con cualquier posición de la palabraOculta se almacenará en esa misma posición y en las demás que coincida.
+                letraAdivinada = true; //Se almacena la variable letraAdivinada como "true" para que no nos reste una vida despues del bucle al haber acertado una letra de la palabraOculta.
+            }
+            palabraComprobada = new string(palabraComprobadaArray); //Transformamos la lista de caracteres con el que estabamos trabajando en el bucle en una cadena de texto para seguir trabajando con cadenas.
+        }
+
+        if (!letraAdivinada) //Si la letra introducida no coincide con ninguna de las posicion de la palabra oculta entonces sumamos un intento, o quitamos una vida, es lo mismo.
+        {
+            intentos++;
+            Console.WriteLine("Letra incorrecta. Intenta de nuevo."); //Mostramos por consola que no ha acertado la letra.
+        }
+    } while (palabraComprobada != palabraOculta && intentos < maxIntentos); //Bucle que comprueba si se ha acertado la palabra o si nos hemos quedado sin vidas.
+
+    if (palabraComprobada == palabraOculta) 
+    {
+        Console.WriteLine("¡Felicidades! Has adivinado la palabra: " + palabraOculta);
+    }
+    else
+    {
+        Console.WriteLine("Lo siento, te quedaste sin intentos. La palabra era: " + palabraOculta);
+    }
+    Console.ReadKey();
+}
